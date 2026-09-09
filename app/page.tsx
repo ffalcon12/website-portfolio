@@ -1,0 +1,31 @@
+'use client';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { ArrowUpRight, Eye, Volume2, VolumeX, CodeXml as Github, ArrowRight, Moon, RotateCcw } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { GITHUB_URL, LINKEDIN_URL } from './profile';
+const Room = lazy(() => import('./room'));
+const projects = [
+ {id:'01',title:'The midnight studio',kind:'3D WORLD / INTERACTIVE',copy:'A small room for big ideas. Explore the original Blender scene, its materials, and the little details that make this space feel lived in.',color:'orange',file:'/downloads/afterhours.blend',label:'Download Blender scene'},
+ {id:'02',title:'The creator',kind:'CHARACTER DESIGN / REAL-TIME',copy:'Night owl. Serial tinkerer. Probably on another cup of coffee. An original human-style creator with swept hair, a dark hoodie, and both hands resting comfortably on the desk.',color:'violet',file:'/models/room.glb',label:'Download the web scene'},
+ {id:'03',title:'Behind the screen',kind:'CREATIVE DEVELOPMENT / OPEN SOURCE',copy:'A responsive 3D homepage built with React and Three.js. Get the complete source, rebuild the room, and make it your own.',color:'mint',file:'/downloads/portfolio-source.zip',label:'Get the source code'},
+];
+export default function Home(){
+ const [monitorIndex,setMonitorIndex]=useState(1),[computer,setComputer]=useState(false),[ready,setReady]=useState(false),[panel,setPanel]=useState<string|null>(null),[sound,setSound]=useState(false),[reset,setReset]=useState(0);
+ useEffect(()=>{if(!computer)return;const timer=setTimeout(()=>setPanel(monitorIndex===2?'about':'work'),650);return()=>clearTimeout(timer)},[computer,monitorIndex]);
+ const openComputer=(index=1)=>{if(index===0){window.open(GITHUB_URL,'_blank','noopener,noreferrer');return}setMonitorIndex(index);setComputer(true)};
+ const exitComputer=()=>{setPanel(null);setComputer(false)};
+ useEffect(()=>{if(!sound)return;const ctx=new AudioContext();const master=ctx.createGain();master.gain.value=.024;master.connect(ctx.destination);const notes=[130.81,196,261.63];const oscillators=notes.map((f,i)=>{const o=ctx.createOscillator();o.type='sine';o.frequency.value=f;const g=ctx.createGain();g.gain.value=.35/(i+1);o.connect(g);g.connect(master);o.start();return o});return()=>{oscillators.forEach(o=>o.stop());ctx.close()}},[sound]);
+ return <main className={'experience '+(ready?'is-ready ':'')+(computer?'room-focused':'')}>
+  <div className="scene"><Suspense fallback={null}><Room onReady={()=>setReady(true)} reset={reset} focused={computer} onComputer={openComputer} monitorIndex={monitorIndex}/></Suspense></div>
+  <div className="vignette"/>
+  {!ready&&<div className="loading"><span className="brand">AFTERHOURS<span>™</span></span><div className="load-track"><i/></div><p>Opening the studio<span className="load-dots">...</span></p></div>}
+  <section className="identity"><h1>FABRIZIO <span>FALCON</span></h1></section>
+  <nav className="minimal-links" aria-label="Room screens"><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub ↗</a><button onClick={()=>openComputer(1)}>Projects</button><button onClick={()=>openComputer(2)}>About me</button><a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></nav>
+  <footer className="utility"><div className="utility-right"><button onClick={()=>{exitComputer();setReset(x=>x+1)}} aria-label="Reset camera"><RotateCcw size={15}/></button><button onClick={()=>setSound(!sound)} aria-pressed={sound}>{sound?<Volume2 size={15}/>:<VolumeX size={15}/>}<span>Sound {sound?'on':'off'}</span></button></div></footer>
+  <Dialog open={!!panel} onOpenChange={open=>{if(!open)exitComputer()}}><DialogContent className="portfolio-dialog" showCloseButton={true}><DialogTitle>{panel==='work'?'Things made after hours.':panel==='about'?'Hi, I’m Fabrizio.':panel==='github'?'Take a look under the hood.':'Let’s stay connected.'}</DialogTitle><DialogDescription>{panel==='work'?'A collection of experiments in design, code, and play.':panel==='about'?'A little about the person behind the screen.':panel==='github'?'The entire room is yours to explore and customize.':'Find me on GitHub or connect with me on LinkedIn.'}</DialogDescription>
+  {panel==='work'?<div className="project-grid">{projects.map(p=><a className={'project '+p.color} href={p.file} download key={p.id}><div className="project-art"><span>{p.id}</span>{p.id==='01'?<Moon/>:p.id==='02'?<Eye/>:<Github/>}<ArrowUpRight className="project-arrow"/></div><small>{p.kind}</small><h3>{p.title}</h3><p>{p.copy}</p><strong>{p.label} <ArrowRight size={15}/></strong></a>)}</div>:panel==='about'?<div className="about-body"><span className="about-symbol">f<span>f</span></span><p>I’m Fabrizio Falcon. Welcome to my personal workspace on the web.</p><div className="bio-block"><h3>About me</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div className="bio-columns"><section><h3>Skills & interests</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></section><section><h3>Experience & education</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></section></div><div className="profile-actions"><a className="main-cta" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">Connect on LinkedIn <span aria-hidden="true" style={{fontWeight:800}}>in</span></a></div></div>:<div className="about-body"><p>Have a project in mind, or just want to say hello?</p><div className="profile-actions"><a className="main-cta" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">Connect on LinkedIn <ArrowUpRight size={18}/></a><a className="main-cta" href={GITHUB_URL} target="_blank" rel="noopener noreferrer">Visit GitHub <ArrowUpRight size={18}/></a></div></div>}
+  {panel==='work'&&<div className="profile-actions"><a className="main-cta" href={GITHUB_URL+'?tab=repositories'} target="_blank" rel="noopener noreferrer">All my repositories <Github size={18}/></a></div>}
+  {computer&&<button className="back-room" onClick={exitComputer}>← Back to room</button>}
+  </DialogContent></Dialog>
+ </main>
+}

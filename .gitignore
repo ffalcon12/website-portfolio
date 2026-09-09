@@ -1,0 +1,68 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches/
+!.yarn/plugins/
+!.yarn/releases/
+!.yarn/versions/
+
+# Build output and framework caches
+.next/
+out/
+dist/
+.vite/
+.turbo/
+.cache/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local deployment state
+.vercel/
+.wrangler/
+.sites-runtime/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Operating system and editor files
+.DS_Store
+._*
+Thumbs.db
+.idea/
+*.swp
+*.swo
+*~
+
+# Python caches used by Blender scripts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Blender automatic backups (keep the actual .blend source)
+*.blend[0-9]*
+
+# Temporary local working directories
+/outputs/
+/work/
+
+# Keep package-lock.json, public assets, .blend, and .glb files in Git.
