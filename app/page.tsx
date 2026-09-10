@@ -169,10 +169,20 @@ export default function Home() {
       )}
 
       <section className="identity">
-        <h1>
-          FABRIZIO <span>FALCON</span>
-        </h1>
-      </section>
+  <h1>FABRIZIO <span>FALCON</span></h1>
+
+  {!computer && (
+    <p className="explore-hint">
+      <span className="hint-desktop">
+        Hover over the screens to get to know me
+      </span>
+      <span className="hint-touch">
+        Tap the screens to get to know me
+      </span>
+      <span className="hint-arrow" aria-hidden="true">↘</span>
+    </p>
+  )}
+</section>
 
       <nav className="minimal-links" aria-label="Room screens">
         <a

@@ -21,3 +21,38 @@
 
 /* Keep the name above the character silhouette. */
 .experience .identity{top:max(14px,2.5svh)}
+
+.identity .explore-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0.65rem 0 0;
+  padding: 0 1rem;
+  color: #d8bd81;
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.035em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
+.hint-arrow {
+  color: #d4ad32;
+  font-size: 1.1rem;
+}
+
+.hint-touch {
+  display: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .hint-desktop {
+    display: none;
+  }
+
+  .hint-touch {
+    display: inline;
+  }
+}
