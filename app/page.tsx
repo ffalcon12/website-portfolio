@@ -3,12 +3,9 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import {
   ArrowUpRight,
-  Eye,
   Volume2,
   VolumeX,
   CodeXml as Github,
-  ArrowRight,
-  Moon,
   RotateCcw,
 } from 'lucide-react';
 
@@ -28,30 +25,15 @@ type Panel = 'work' | 'about' | null;
 const projects = [
   {
     id: '01',
-    title: 'The midnight studio',
-    kind: '3D WORLD / INTERACTIVE',
-    copy: 'A small room for big ideas. Explore the original Blender scene, its materials, and the little details that make this space feel lived in.',
-    color: 'orange',
-    file: '/downloads/afterhours.blend',
-    label: 'Download Blender scene',
-  },
-  {
-    id: '02',
-    title: 'The creator',
-    kind: 'CHARACTER DESIGN / REAL-TIME',
-    copy: 'Night owl. Serial tinkerer. Probably on another cup of coffee. An original human-style creator with swept hair, a dark hoodie, and both hands resting comfortably on the desk.',
-    color: 'violet',
-    file: '/models/room.glb',
-    label: 'Download the web scene',
-  },
-  {
-    id: '03',
-    title: 'Behind the screen',
-    kind: 'CREATIVE DEVELOPMENT / OPEN SOURCE',
-    copy: 'A responsive 3D homepage built with React and Three.js. Get the complete source, rebuild the room, and make it your own.',
+    title: 'RealAgent',
+    kind: 'AI AGENT / NATURAL-LANGUAGE SEARCH',
+    copy: 'Search real estate listings in plain English. RealAgent translates your request into validated SQL and returns readable results. When there are no exact matches, it tries alternatives that prioritize either your budget or your requested features.',
+    detail:
+      'Built around local LLM inference, runtime schema inspection, SQL validation, read-only database access, and a one-retry query repair loop.',
+    stack: 'Python · SQLite · LangChain · Ollama · pandas',
     color: 'mint',
-    file: '/downloads/portfolio-source.zip',
-    label: 'Get the source code',
+    href: 'https://github.com/ffalcon12/RealAgent',
+    label: 'View on GitHub',
   },
 ];
 
@@ -169,20 +151,24 @@ export default function Home() {
       )}
 
       <section className="identity">
-  <h1>FABRIZIO <span>FALCON</span></h1>
+        <h1>
+          FABRIZIO <span>FALCON</span>
+        </h1>
 
-  {!computer && (
-    <p className="explore-hint">
-      <span className="hint-desktop">
-        Hover over the screens to get to know me
-      </span>
-      <span className="hint-touch">
-        Tap the screens to get to know me
-      </span>
-      <span className="hint-arrow" aria-hidden="true">↘</span>
-    </p>
-  )}
-</section>
+        {!computer && (
+          <p className="explore-hint">
+            <span className="hint-desktop">
+              Hover over the screens to get to know me
+            </span>
+            <span className="hint-touch">
+              Tap the screens to get to know me
+            </span>
+            <span className="hint-arrow" aria-hidden="true">
+              ↘
+            </span>
+          </p>
+        )}
+      </section>
 
       <nav className="minimal-links" aria-label="Room screens">
         <a
@@ -251,46 +237,53 @@ export default function Home() {
         >
           <DialogTitle>
             {panel === 'work'
-              ? 'Things made after hours.'
+              ? 'Selected projects.'
               : 'Hi, I’m Fabrizio.'}
           </DialogTitle>
 
           <DialogDescription>
             {panel === 'work'
-              ? 'A collection of experiments in design, code, and play.'
+              ? 'Practical projects in AI, data, and software development.'
               : 'A little about the person behind the screen.'}
           </DialogDescription>
 
           {panel === 'work' && (
             <>
-              <div className="project-grid">
+              <div
+                className="project-grid"
+                style={{ gridTemplateColumns: 'minmax(0, 1fr)' }}
+              >
                 {projects.map((project) => (
                   <a
                     className={`project ${project.color}`}
-                    href={project.file}
-                    download
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     key={project.id}
                   >
                     <div className="project-art">
                       <span>{project.id}</span>
 
-                      {project.id === '01' ? (
-                        <Moon />
-                      ) : project.id === '02' ? (
-                        <Eye />
-                      ) : (
-                        <Github />
-                      )}
+                      <Github aria-hidden="true" />
 
-                      <ArrowUpRight className="project-arrow" />
+                      <ArrowUpRight
+                        className="project-arrow"
+                        aria-hidden="true"
+                      />
                     </div>
 
                     <small>{project.kind}</small>
                     <h3>{project.title}</h3>
                     <p>{project.copy}</p>
+                    <p>{project.detail}</p>
+
+                    <p style={{ color: '#a4d3c8', fontSize: '13px' }}>
+                      {project.stack}
+                    </p>
 
                     <strong>
-                      {project.label} <ArrowRight size={15} />
+                      {project.label}
+                      <ArrowUpRight size={15} aria-hidden="true" />
                     </strong>
                   </a>
                 ))}
@@ -304,7 +297,7 @@ export default function Home() {
                   rel="noopener noreferrer"
                 >
                   All my repositories
-                  <Github size={18} />
+                  <Github size={18} aria-hidden="true" />
                 </a>
               </div>
             </>
